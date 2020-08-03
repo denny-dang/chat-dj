@@ -1,9 +1,9 @@
 const Discord = require("discord.js");
 const commands = require("./commands/index.js");
+const { prefix } = require("./data.json");
 const client = new Discord.Client();
 
 const chatDJMap = new Map();
-const prefix = "!";
 
 client.once("ready", () => {
     console.log("Chat DJ is ready!");

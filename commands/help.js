@@ -1,5 +1,5 @@
 const commands = require('./util/helpUtil.js');
-const { prefix } = require("../config.json");
+const { prefix } = require("../data.json");
 
 module.exports = {
     name: 'help',
