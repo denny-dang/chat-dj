@@ -1,13 +1,35 @@
 {
-    "name": "Chat DJ",
-    "description": "Music bot that plays music",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-        "start": "node index.js"
-    },
-    "dependencies": {
-        "discord.js": "11.1.0",
-        "request": "2.81.0"
-    }
+  "name": "chat-dj",
+  "version": "1.0.0",
+  "description": "A bot that plays music in a voice channel",
+  "main": "index.js",
+  "engines": {
+    "node": "14.7.0",
+    "npm": "6.14.7"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denny-dang/chat-dj.git"
+  },
+  "keywords": [
+    "discord",
+    "music"
+  ],
+  "author": "denny-dang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/denny-dang/chat-dj/issues"
+  },
+  "homepage": "https://github.com/denny-dang/chat-dj#readme",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "discord.js": "^12.2.0",
+    "ffmpeg": "0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "ytdl-core": "^3.2.0"
+  }
 }
