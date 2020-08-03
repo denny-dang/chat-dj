@@ -1,9 +1,9 @@
 const Discord = require("discord.js");
-const { prefix, token } = require("./config.json");
 const commands = require("./commands/index.js");
 const client = new Discord.Client();
 
 const chatDJMap = new Map();
+const prefix = "!";
 
 client.once("ready", () => {
     console.log("Chat DJ is ready!");
@@ -36,4 +36,4 @@ client.on("message", async message => {
     }
 });
 
-client.login(token);
+client.login(process.env.BOT_TOKEN);
