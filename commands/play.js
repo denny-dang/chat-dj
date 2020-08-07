@@ -29,7 +29,7 @@ module.exports = {
                 });
             dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
             serverQueue.textChannel.send(
-                `**${song.title}** has started playing!`
+                `**${song.title}** has started playing!\nSong URL: ${song.url}`
             );
         };
 
