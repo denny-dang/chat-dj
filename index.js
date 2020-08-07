@@ -9,7 +9,7 @@ client.once("ready", () => {
     console.log("Chat DJ is ready!");
 });
 
-client.on("message", async message => {
+client.on("message", async (message) => {
     if (message.author.bot || !message.content.startsWith(prefix)) return;
     if (!chatDJMap.get(message.guild.id)) {
         const botData = {
@@ -19,7 +19,6 @@ client.on("message", async message => {
             songs: [],
             currentSong: null,
             volume: 5,
-
         };
         chatDJMap.set(message.guild.id, botData);
     }
@@ -31,7 +30,9 @@ client.on("message", async message => {
             commands[commandName].action(message, serverQueue);
             return;
         } else {
-            message.channel.send("You need to enter a valid command!");
+            message.channel.send(
+                "You need to enter a valid command! Enter !help to list all valid commands."
+            );
         }
     }
 });

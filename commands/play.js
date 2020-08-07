@@ -1,12 +1,18 @@
 const ytdl = require("ytdl-core");
+
+const YouTube = require("discord-youtube-api");
+const youtube = new YouTube(process.env.YT_TOKEN);
+
 module.exports = {
-    name: 'play <song URL>',
-    description: 'plays given song or adds to song queue if one is already playing',
+    name: "play",
+    description:
+        "plays given song or adds to song queue if one is already playing",
     action: async (message, serverQueue) => {
         const playHelper = (serverQueue) => {
             const song = serverQueue.songs[0];
             if (!song) {
                 serverQueue.voiceChannel.leave();
+                serverQueue.currentSong = null;
                 return message.channel.send(
                     "I left the voice chat. Play a song to add me back!"
                 );
@@ -18,30 +24,47 @@ module.exports = {
                     serverQueue.songs.shift();
                     playHelper(serverQueue);
                 })
-                .on("error", error => {
+                .on("error", (error) => {
                     console.error(error);
-
                 });
             dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-            serverQueue.textChannel.send(`**${song.title}** has started playing!`);
+            serverQueue.textChannel.send(
+                `**${song.title}** has started playing!`
+            );
+        };
+
+        const index = message.content.indexOf(" ");
+        if (index <= 0) {
+            return message.channel.send(
+                "Please enter a valid URL or search query."
+            );
         }
-
-
-        const args = message.content.split(" ");
+        const args = message.content.substr(index + 1);
+        let URL = null;
+        if (args.includes(".com/")) {
+            URL = args;
+        } else {
+            URL = (await youtube.searchVideos(args)).url;
+        }
         serverQueue.voiceChannel = message.member.voice.channel;
         if (!serverQueue.voiceChannel)
             return message.channel.send(
                 "Join the voice channel to play music!"
             );
-        const permissions = serverQueue.voiceChannel.permissionsFor(message.client.user);
+        const permissions = serverQueue.voiceChannel.permissionsFor(
+            message.client.user
+        );
         if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
             return message.channel.send(
                 "I need permission to join and speak in your voice channel to work!"
             );
         }
-        let validate = await ytdl.validateURL(args[1]);
-        if (!validate) return message.channel.send("This URL doesn't seem to be valid. Please try again with a valid YouTube URL.")
-        const songInfo = await ytdl.getInfo(args[1]);
+        let validate = await ytdl.validateURL(URL);
+        if (!validate)
+            return message.channel.send(
+                "This URL doesn't seem to be valid. Please try again with a valid YouTube URL."
+            );
+        const songInfo = await ytdl.getInfo(URL);
         const song = {
             title: songInfo.videoDetails.title,
             url: songInfo.videoDetails.video_url,
@@ -59,7 +82,9 @@ module.exports = {
             }
         } else {
             serverQueue.songs.push(song);
-            return message.channel.send(`**${song.title}** has been added to the queue!`);
+            return message.channel.send(
+                `**${song.title}** has been added to the queue!`
+            );
         }
-    }
-}
+    },
+};
