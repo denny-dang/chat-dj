@@ -9,7 +9,7 @@ module.exports = {
         const song = serverQueue.currentSong;
         if (!song) return message.channel.send("There is no song playing!");
         return message.channel.send(
-            `**${song.title}** is currently playing!\nSong requested by **${song.requestor}**\nSong URL: ${song.url}`
+            `**${song.title}** is currently playing!\nSong requested by **${song.requestor}**!\nSong URL: ${song.url}`
         );
     },
 };
