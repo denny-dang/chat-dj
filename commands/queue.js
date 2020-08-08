@@ -6,7 +6,7 @@ module.exports = {
             return message.channel.send(
                 "Join the voice channel to view the song queue!"
             );
-        if (!serverQueue.songs.length)
+        if (serverQueue.songs.length <= 1)
             return message.channel.send("The song queue is empty!");
         let queueString = `Songs in the queue:\n\n`;
 
