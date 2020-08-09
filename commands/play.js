@@ -44,7 +44,11 @@ module.exports = {
         if (args.includes(".com/")) {
             URL = args;
         } else {
-            URL = (await youtube.searchVideos(args)).url;
+            try {
+                URL = (await youtube.searchVideos(args)).url;
+            } catch (error) {
+                return message.channel.send(error);
+            }
         }
         serverQueue.voiceChannel = message.member.voice.channel;
         if (!serverQueue.voiceChannel)
@@ -64,7 +68,12 @@ module.exports = {
             return message.channel.send(
                 "This URL doesn't seem to be valid. Please try again with a valid YouTube URL."
             );
-        const songInfo = await ytdl.getInfo(URL);
+        let songInfo = null;
+        try {
+            songInfo = await ytdl.getInfo(URL);
+        } catch (error) {
+            return message.channel.send(error);
+        }
         const song = {
             title: songInfo.videoDetails.title,
             url: songInfo.videoDetails.video_url,
