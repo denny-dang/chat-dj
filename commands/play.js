@@ -8,7 +8,7 @@ module.exports = {
     description:
         "plays given song or adds to song queue if one is already playing",
     action: async (message, serverQueue) => {
-        const playHelper = (serverQueue) => {
+        const playHelper = async (serverQueue) => {
             const song = serverQueue.songs[0];
             if (!song) {
                 serverQueue.voiceChannel.leave();
@@ -19,7 +19,7 @@ module.exports = {
             }
             serverQueue.currentSong = song;
             const dispatcher = serverQueue.connection
-                .play(await ytdl(song.url), {type: 'opus'})
+                .play(await ytdl(song.url), { type: "opus" })
                 .on("finish", () => {
                     serverQueue.songs.shift();
                     playHelper(serverQueue);
