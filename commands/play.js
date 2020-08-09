@@ -54,24 +54,27 @@ module.exports = {
         const args = message.content.substr(index + 1);
         let URL = null;
         let songInfo = null;
-        if (args.includes(".com/")) {
-            URL = args;
-        } else {
-            try {
+        try {
+            if (args.includes(".com/")) {
+                URL = args;
+                songInfo = await ytdl.getInfo(URL);
+            } else {
                 URL = (await youtube.searchVideos(args)).url;
                 let validate = await ytdl.validateURL(URL);
                 if (!validate)
                     return message.channel.send(
                         "This URL doesn't seem to be valid. Please try again with a valid YouTube URL."
                     );
-                songInfo = await ytdl.getInfo(URL);
-            } catch (error) {
-                return message.channel.send(error);
+                songInfo = await ytdl.getBasicInfo(URL);
             }
+        } catch (error) {
+            return message.channel.send(
+                "There was an error retrieving the song/video. Please try again later."
+            );
         }
         const song = {
-            title: songInfo.videoDetails.title,
-            url: songInfo.videoDetails.video_url,
+            title: songInfo.title,
+            url: songInfo.video_url,
             requestor: message.member.user.username,
         };
 
