@@ -32,24 +32,6 @@ module.exports = {
                 `**${song.title}** has started playing!\nSong URL: ${song.url}`
             );
         };
-
-        const index = message.content.indexOf(" ");
-        if (index <= 0) {
-            return message.channel.send(
-                "Please enter a valid URL or search query."
-            );
-        }
-        const args = message.content.substr(index + 1);
-        let URL = null;
-        if (args.includes(".com/")) {
-            URL = args;
-        } else {
-            try {
-                URL = (await youtube.searchVideos(args)).url;
-            } catch (error) {
-                return message.channel.send(error);
-            }
-        }
         serverQueue.voiceChannel = message.member.voice.channel;
         if (!serverQueue.voiceChannel)
             return message.channel.send(
@@ -63,16 +45,29 @@ module.exports = {
                 "I need permission to join and speak in your voice channel to work!"
             );
         }
-        let validate = await ytdl.validateURL(URL);
-        if (!validate)
+        const index = message.content.indexOf(" ");
+        if (index <= 0) {
             return message.channel.send(
-                "This URL doesn't seem to be valid. Please try again with a valid YouTube URL."
+                "Please enter a valid URL or search query."
             );
+        }
+        const args = message.content.substr(index + 1);
+        let URL = null;
         let songInfo = null;
-        try {
-            songInfo = await ytdl.getInfo(URL);
-        } catch (error) {
-            return message.channel.send(error);
+        if (args.includes(".com/")) {
+            URL = args;
+        } else {
+            try {
+                URL = (await youtube.searchVideos(args)).url;
+                let validate = await ytdl.validateURL(URL);
+                if (!validate)
+                    return message.channel.send(
+                        "This URL doesn't seem to be valid. Please try again with a valid YouTube URL."
+                    );
+                songInfo = await ytdl.getInfo(URL);
+            } catch (error) {
+                return message.channel.send(error);
+            }
         }
         const song = {
             title: songInfo.videoDetails.title,
