@@ -1,5 +1,5 @@
-const ytdl = require("ytdl-core");
-
+// const ytdl = require("ytdl-core)
+const ytdl = require("ytdl-core-discord");
 const YouTube = require("discord-youtube-api");
 const youtube = new YouTube(process.env.YT_TOKEN);
 
@@ -19,7 +19,7 @@ module.exports = {
             }
             serverQueue.currentSong = song;
             const dispatcher = serverQueue.connection
-                .play(ytdl(song.url))
+                .play(await ytdl(song.url), {type: 'opus'})
                 .on("finish", () => {
                     serverQueue.songs.shift();
                     playHelper(serverQueue);
