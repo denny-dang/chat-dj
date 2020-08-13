@@ -25,7 +25,9 @@ module.exports = {
                     playHelper(serverQueue);
                 })
                 .on("error", (error) => {
-                    console.error(error);
+                    return message.channel.send(
+                        "I'm broke. Tell Denny to fix me"
+                    );
                 });
             dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
             serverQueue.textChannel.send(
