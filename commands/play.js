@@ -8,6 +8,10 @@ module.exports = {
     description:
         "plays given song or adds to song queue if one is already playing",
     action: async (message, serverQueue) => {
+        /*playHelper
+            args: serverQueue -> a list of song objects
+            action: pop the first song on the queue and then play it on current server based on song url attribute
+        */
         const playHelper = async (serverQueue) => {
             const song = serverQueue.songs[0];
             if (!song) {
@@ -34,6 +38,11 @@ module.exports = {
                 `**${song.title}** has started playing!\nSong URL: ${song.url}`
             );
         };
+
+        /*
+         Main body of play action function is validating permissions, parsing arguments, and constructing song queue.
+         The song queue will be passed into playHelper to handle server audio logic.
+         */
         serverQueue.voiceChannel = message.member.voice.channel;
         if (!serverQueue.voiceChannel)
             return message.channel.send(
